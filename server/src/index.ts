@@ -2,27 +2,45 @@ import { config } from "dotenv";
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
-import { usersTable } from "./db/schema";
+import AuthRoutes from "./routes/auth";
+import {
+  serializerCompiler,
+  validatorCompiler,
+  type ZodTypeProvider,
+  jsonSchemaTransform,
+} from "fastify-type-provider-zod";
+import { z } from "zod";
 
 config();
 const app = Fastify({
   logger: true,
-});
+}).withTypeProvider<ZodTypeProvider>();
 
 const connectionString = process.env.DATABASE_URL;
 if (!connectionString) {
   throw new Error("DATABASE_URL não foi definida.");
 }
-const client = postgres(connectionString);
-export const db = drizzle({ client });
+export const db = drizzle(connectionString, { logger: true });
+// export const db = drizzle({ client });
+
+app.setValidatorCompiler(validatorCompiler);
+app.setSerializerCompiler(serializerCompiler);
 
 await app.register(cors, {
   origin: "*",
   methods: ["POST", "GET", "DELETE", "PUT"],
 });
 
-await app.register(import("@fastify/swagger"));
+await app.register(import("@fastify/swagger"), {
+  openapi: {
+    info: {
+      title: "Nivo API",
+      description: "Documentação da API",
+      version: "1.0.0",
+    },
+  },
+  transform: jsonSchemaTransform,
+});
 
 await app.register(import("@fastify/swagger-ui"), {
   routePrefix: "/v1/docs",
@@ -46,6 +64,10 @@ await app.register(import("@fastify/swagger-ui"), {
   transformSpecificationClone: true,
 });
 
+await app.register(AuthRoutes, {
+  prefix: "/auth",
+});
+
 app.get(
   "/",
   {
@@ -53,9 +75,9 @@ app.get(
       description: "Rota de teste",
       tags: ["teste"],
       response: {
-        200: {
-          hello: "",
-        },
+        200: z.object({
+          hello: z.string(),
+        }),
       },
     },
   },
