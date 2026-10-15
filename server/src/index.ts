@@ -10,6 +10,7 @@ import {
   jsonSchemaTransform,
 } from "fastify-type-provider-zod";
 import { z } from "zod";
+import TransactionsRoutes from "./routes/transactions";
 
 config();
 const app = Fastify({
@@ -36,7 +37,7 @@ await app.register(import("@fastify/swagger"), {
     info: {
       title: "Nivo API",
       description: "Documentação da API",
-      version: "1.0.0",
+      version: "0.0.1",
     },
   },
   transform: jsonSchemaTransform,
@@ -66,6 +67,9 @@ await app.register(import("@fastify/swagger-ui"), {
 
 await app.register(AuthRoutes, {
   prefix: "/auth",
+});
+await app.register(TransactionsRoutes, {
+  prefix: "/transaction",
 });
 
 app.get(
