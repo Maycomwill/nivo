@@ -42,18 +42,21 @@ export default async function AuthRoutes(app: FastifyInstance) {
           }),
           400: z.object({
             message: z.string(),
-            data: z.array(
+            data:
               z.object({
                 field: z.string(),
                 message: z.string(),
-              }),
-            ),
+              }) || z.null(),
           }),
           404: z.object({
             message: z.string(),
           }),
           500: z.object({
             message: z.string(),
+            data:
+              z.object({
+                field: z.string(),
+              }) || z.null(),
           }),
         },
       },
@@ -89,14 +92,14 @@ export default async function AuthRoutes(app: FastifyInstance) {
 
         const current_user = user[0];
 
-        // const passwords_is_equals = services.compare_password(
-        //   password,
-        //   current_user.password,
-        // );
+        const passwords_is_equals = services.compare_password(
+          password,
+          current_user.password,
+        );
 
-        // if (!passwords_is_equals) {
-        //   return res.status(400).send({ message: "Email ou senha incorretos" });
-        // }
+        if (!passwords_is_equals) {
+          return res.status(400).send({ message: "Email ou senha incorretos" });
+        }
 
         const token = services.sign_token({
           data: {
@@ -133,7 +136,74 @@ export default async function AuthRoutes(app: FastifyInstance) {
     },
   );
 
- 
+  app.post(
+    "/register",
+    {
+      schema: {
+        tags: ["auth"],
+        description: "Rota de registro de usuário",
+        body: registerSchema,
+        response: {
+          201: z.object({
+            message: z.string(),
+          }),
+          400: z.object({
+            message: z.string(),
+          }),
+          500: z.object({
+            message: z.string(),
+          }),
+        },
+      },
+    },
+    async (req, res) => {
+      type NewUser = typeof usersTable.$inferInsert;
+      try {
+        const result = registerSchema.safeParse(req.body);
+        if (!result.success) {
+          return res.status(400).send({
+            message: "Dados inválidos",
+            // data: result.error.issues.map((issue) => ({
+            //   field: issue.path.join("."),
+            //   message: issue.message,
+            // })),
+          });
+        }
+
+        const { email, name, password } = result.data;
+
+        const encrypted_password = services.encrypt_password(password);
+        const new_user: NewUser = { name, email, password: encrypted_password };
+
+        const create_an_user = async (user: NewUser) => {
+          return db
+            .insert(usersTable)
+            .values(user)
+            .returning({ new_user_id: usersTable.id });
+        };
+
+        await create_an_user(new_user);
+
+        return res.status(201).send({
+          message: "Usuário criado com sucesso",
+        });
+      } catch (error) {
+        if (error instanceof z.ZodError || error instanceof Error) {
+          return res.status(500).send({
+            message: error.message,
+            data: {
+              field: error.cause,
+            },
+          });
+        }
+        req.log.error(error);
+
+        return res.status(500).send({
+          message: "Erro interno do servidor",
+        });
+      }
+    },
+  );
 
   app.post(
     "/verify",
@@ -145,11 +215,6 @@ export default async function AuthRoutes(app: FastifyInstance) {
         response: {
           200: z.object({
             message: z.string(),
-            data: z.object({
-              id: z.string(),
-              email: z.string(),
-              name: z.string(),
-            }),
           }),
           400: z.object({
             message: z.string(),
