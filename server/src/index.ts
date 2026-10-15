@@ -1,12 +1,21 @@
 import { config } from "dotenv";
 import Fastify from "fastify";
 import cors from "@fastify/cors";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
+import { usersTable } from "./db/schema";
 
+config();
 const app = Fastify({
   logger: true,
 });
 
-config();
+const connectionString = process.env.DATABASE_URL;
+if (!connectionString) {
+  throw new Error("DATABASE_URL não foi definida.");
+}
+const client = postgres(connectionString);
+export const db = drizzle({ client });
 
 await app.register(cors, {
   origin: "*",
@@ -50,8 +59,10 @@ app.get(
       },
     },
   },
-  function (request, reply) {
-    reply.status(200).send({ hello: "world" });
+  async function (_, reply) {
+    reply.status(200).send({
+      hello: "World",
+    });
   },
 );
 

@@ -8,13 +8,16 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx watch src/index.ts",
     "build": "tsup src/index.ts",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "studio": "npx drizzle-kit studio --verbose",
+    "migrate": "npx drizzle-kit push --verbose"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^26.6.5",
+    "drizzle-kit": "^1.0.0-rc.4",
     "tsup": "^9.0.0",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2"
@@ -25,6 +28,8 @@
     "@fastify/swagger": "^9.9.2",
     "@fastify/swagger-ui": "^6.1.2",
     "dotenv": "^18.0.8",
-    "fastify": "^5.12.7"
+    "drizzle-orm": "^1.0.0-rc.4",
+    "fastify": "^5.12.7",
+    "postgres": "^3.4.9"
   }
 }
