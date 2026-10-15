@@ -8,8 +8,17 @@ import services from "../services";
 export default async function AuthRoutes(app: FastifyInstance) {
   const loginSchema = z.object({
     email: z.email(),
-    password: z.string().min(1, "A senha é obrigatória"),
+    password: z.string().min(1, "A senha é obrigatória."),
     remember: z.boolean().default(false),
+  });
+  const registerSchema = z.object({
+    email: z.email(),
+    password: z.string().min(8, "A senha deve ter no mínimo 8 caracteres."),
+    name: z.string(),
+  });
+
+  const verifySchema = z.object({
+    token: z.string(),
   });
 
   app.post(
@@ -109,6 +118,66 @@ export default async function AuthRoutes(app: FastifyInstance) {
             },
           },
         });
+      } catch (error) {
+        if (error instanceof z.ZodError || error instanceof Error) {
+          return res.status(500).send({
+            message: error.message,
+          });
+        }
+        req.log.error(error);
+
+        return res.status(500).send({
+          message: "Erro interno do servidor",
+        });
+      }
+    },
+  );
+
+ 
+
+  app.post(
+    "/verify",
+    {
+      schema: {
+        tags: ["auth"],
+        description: "Rota de verificação da validade do token de acesso",
+        body: verifySchema,
+        response: {
+          200: z.object({
+            message: z.string(),
+            data: z.object({
+              id: z.string(),
+              email: z.string(),
+              name: z.string(),
+            }),
+          }),
+          400: z.object({
+            message: z.string(),
+          }),
+          500: z.object({
+            message: z.string(),
+          }),
+        },
+      },
+    },
+    async (req, res) => {
+      try {
+        const result = verifySchema.safeParse(req.body);
+        if (!result.success) {
+          return res.status(400).send({
+            message: "Token inválido",
+          });
+        }
+
+        const { token } = result.data;
+
+        const decoded = services.verify_token(token);
+        if (!decoded.valid || decoded.data === null) {
+          return res
+            .status(400)
+            .send({ message: "Token inválido", data: null });
+        }
+        return res.status(200).send({ message: "Token válido", data: decoded });
       } catch (error) {
         if (error instanceof z.ZodError || error instanceof Error) {
           return res.status(500).send({
