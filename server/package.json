@@ -1,0 +1,43 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsx watch src/index.ts",
+    "build": "tsup src/index.ts",
+    "start": "node dist/index.js",
+    "studio": "npx drizzle-kit studio --verbose",
+    "migrate": "npx drizzle-kit push --verbose"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^26.6.5",
+    "drizzle-kit": "^1.0.0-rc.4",
+    "tsup": "^9.0.0",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "@fastify/cors": "^11.3.1",
+    "@fastify/static": "^10.1.6",
+    "@fastify/swagger": "^9.9.2",
+    "@fastify/swagger-ui": "^6.1.2",
+    "@fastify/type-provider-zod": "^1.0.1",
+    "@paralleldrive/cuid2": "^3.3.0",
+    "bcrypt": "^6.0.0",
+    "dotenv": "^18.0.8",
+    "drizzle-orm": "^1.0.0-rc.4",
+    "fastify": "^5.12.7",
+    "fastify-type-provider-zod": "^7.0.0",
+    "jsonwebtoken": "^9.0.3",
+    "postgres": "^3.4.9",
+    "zod": "^4.6.7"
+  }
+}
