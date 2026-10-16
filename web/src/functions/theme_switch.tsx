@@ -1,22 +1,9 @@
 import { Toggle } from "@/components/ui/toggle";
+import useTheme from "@/hooks/useTheme";
 import { Sun, Moon } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useLocalStorage } from "usehooks-ts";
 
 function ThemeSwitch() {
-  const [theme, setTheme] = useLocalStorage("theme", "light");
-
-  useEffect(() => {
-    document.body.classList.remove("light", "dark");
-    document.body.classList.add(theme);
-  }, [theme]);
-
-  const [enabled, setEnabled] = useState(theme == "light");
-
-  const handleThemeChange = (enabled: boolean) => {
-    setTheme(enabled ? "light" : "dark");
-    setEnabled(enabled);
-  };
+  const {enabled, handleThemeChange} = useTheme()
   return (
     <Toggle
       pressed={enabled}
@@ -24,7 +11,7 @@ function ThemeSwitch() {
       variant={"outline"}
       className="rounded-full p-0"
     >
-      {theme === "dark" ? <Moon /> : <Sun />}
+      {enabled ? <Moon /> : <Sun />}
     </Toggle>
   );
 }
