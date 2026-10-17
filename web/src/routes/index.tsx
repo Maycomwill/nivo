@@ -1,10 +1,15 @@
 import { Route, Routes } from "react-router";
-import Home from "../screens/home";
+import Welcome from "../screens/welcome";
+import Login from "@/screens/login";
+import useAuth from "@/hooks/useAuth";
+import Home from "@/screens/home";
 
 function CustomRouter() {
+  const { auth } = useAuth();
   return (
     <Routes>
-      <Route index element={<Home />} />
+      <Route index element={auth ? <Home /> : <Welcome />} />
+      <Route path="/login" element={<Login />} />
     </Routes>
   );
 }

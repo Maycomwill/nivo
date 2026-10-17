@@ -10,11 +10,13 @@ interface JwtPayload {
 }
 
 export default function signToken({ data, remember }: JwtPayload) {
-    const secret = process.env.JWTSECRET;
+  const secret = process.env.JWTSECRET;
 
-     if (!secret) {
+  if (!secret) {
     throw new Error("JWTSECRET não foi definida.");
   }
+
+  console.log(jwt.sign(data, secret, { expiresIn: remember ? "30d" : "1d" }));
 
   return jwt.sign(data, secret, {
     expiresIn: remember ? "30d" : "1d",
