@@ -5,7 +5,7 @@ function Logoff() {
   const { handleLogoff } = useAuth();
   return (
     <div>
-      <Button size={"icon"} variant={"ghost"} onClick={() => handleLogoff()}>
+      <Button size={"icon"} variant={"ghost"} onClick={handleLogoff}>
         <LogOutIcon />
       </Button>
     </div>

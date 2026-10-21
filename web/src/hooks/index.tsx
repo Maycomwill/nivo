@@ -1,3 +1,4 @@
+import { TransactionContextProvider } from "@/providers/TransactionProvider";
 import { AuthContextProvider } from "@/providers/AuthProvider";
 import { LoadingContextProvider } from "@/providers/LoadingProvider";
 import { ThemeContextProvider } from "@/providers/ThemeProvider";
@@ -7,7 +8,9 @@ function AppProvider({ children }: { children: ReactNode }) {
   return (
     <LoadingContextProvider>
       <ThemeContextProvider>
-        <AuthContextProvider>{children}</AuthContextProvider>
+        <AuthContextProvider>
+          <TransactionContextProvider>{children}</TransactionContextProvider>
+        </AuthContextProvider>
       </ThemeContextProvider>
     </LoadingContextProvider>
   );

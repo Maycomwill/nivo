@@ -7,6 +7,28 @@
 
 
 @theme {
+  --color-brilliant-rose-50: #fdf2f7;
+  --color-brilliant-rose-100: #fce7f2;
+  --color-brilliant-rose-200: #fbcfe6;
+  --color-brilliant-rose-300: #f9a8d0;
+  --color-brilliant-rose-400: #f360a5;
+  --color-brilliant-rose-500: #ec4890;
+  --color-brilliant-rose-600: #db276d;
+  --color-brilliant-rose-700: #be1854;
+  --color-brilliant-rose-800: #9d1746;
+  --color-brilliant-rose-900: #83183d;
+  --color-brilliant-rose-950: #500720;
+  --color-punch-50: #fff2f1;
+  --color-punch-100: #ffe2df;
+  --color-punch-200: #ffcac4;
+  --color-punch-300: #ffa59b;
+  --color-punch-400: #ff7161;
+  --color-punch-500: #ff4530;
+  --color-punch-600: #e1220d;
+  --color-punch-700: #cb1d0a;
+  --color-punch-800: #a81b0c;
+  --color-punch-900: #8a1e12;
+  --color-punch-950: #4c0a03;
   --color-aquamarine-50: #effef6;
   --color-aquamarine-100: #dafeed;
   --color-aquamarine-200: #b7fbdb;

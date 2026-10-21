@@ -32,6 +32,7 @@ export default async function AuthRoutes(app: FastifyInstance) {
           200: z.object({
             message: z.string(),
             token: z.string(),
+            exp: z.number(),
             user:
               z.object({
                 email: z.email(),
@@ -42,16 +43,19 @@ export default async function AuthRoutes(app: FastifyInstance) {
           400: z.object({
             message: z.string(),
             token: z.string(),
+            exp: z.number(),
             user: z.null(),
           }),
           404: z.object({
             message: z.string(),
             token: z.string(),
+            exp: z.number(),
             user: z.null(),
           }),
           500: z.object({
             message: z.string(),
             token: z.string(),
+            exp: z.number(),
             user: z.null(),
           }),
         },
@@ -64,6 +68,7 @@ export default async function AuthRoutes(app: FastifyInstance) {
           return res.status(400).send({
             message: "Dados inválidos",
             token: "",
+            exp: 0,
             user: null,
           });
         }
@@ -82,6 +87,7 @@ export default async function AuthRoutes(app: FastifyInstance) {
           return res.status(404).send({
             message: "Usuário inexistente",
             token: "",
+            exp: 0,
             user: null,
           });
         }
@@ -105,10 +111,13 @@ export default async function AuthRoutes(app: FastifyInstance) {
           },
           remember,
         });
+        const verify_token = services.verify_token(token);
+        console.log(verify_token);
 
         return res.status(200).send({
           message: "Login autorizado",
           token,
+          exp: verify_token.data!.exp,
           user: {
             id: current_user.id,
             email: current_user.email,
@@ -120,6 +129,7 @@ export default async function AuthRoutes(app: FastifyInstance) {
           return res.status(500).send({
             message: error.message,
             token: "",
+            exp: 0,
             user: null,
           });
         }
@@ -128,6 +138,7 @@ export default async function AuthRoutes(app: FastifyInstance) {
         return res.status(500).send({
           message: "Erro interno do servidor",
           token: "",
+          exp: 0,
           user: null,
         });
       }

@@ -9,6 +9,7 @@ import { useState } from "react";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import useAuth from "@/hooks/useAuth";
 import { useNavigate } from "react-router";
+import { sleep } from "@/functions/sleep";
 
 const formSchema = z.object({
   email: z.email({ error: "Digite um e-mail no formato correto" }),
@@ -29,9 +30,10 @@ function LoginForm() {
     },
   });
 
-  function onSubmit(payload: z.infer<typeof formSchema>) {
+  async function onSubmit(payload: z.infer<typeof formSchema>) {
     // console.log("Submit", payload);
     handleLogin(payload);
+    await sleep(2000);
     navigate("/");
     return;
   }
