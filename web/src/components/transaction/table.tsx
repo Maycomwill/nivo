@@ -27,7 +27,7 @@ function Table({ transactions }: { transactions: TransactionProps[] }) {
       <TableBody>
         {transactions.map((transaction: TransactionProps) => {
           return (
-            <TableRow>
+            <TableRow key={transaction.id}>
               <TableCell className="w-[5%] place-items-center">
                 <CategoryIcons category={transaction.category} />
               </TableCell>
@@ -46,7 +46,7 @@ function Table({ transactions }: { transactions: TransactionProps[] }) {
               </TableCell>
               <TableCell className="w-[5%] place-items-end xl:w-fit">
                 <Link
-                  to="/"
+                  to={`/transaction/${transaction.id}`}
                   className="flex w-full place-items-center items-center justify-end"
                 >
                   <Edit2 size={12} />

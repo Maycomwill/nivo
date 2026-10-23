@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import NivoLogo from "../../public/nivo.svg";
 import { Link } from "react-router";
+import ThemeSwitch from "@/functions/theme_switch";
 function Welcome() {
   return (
     <div className="flex w-full flex-1 flex-col overflow-hidden p-4">
@@ -29,8 +30,8 @@ function Welcome() {
         />
       </section>
 
-      <div className="flex h-full w-full flex-col items-start justify-end space-y-2 z-10 bg-slate-950 pt-4">
-        <p className="text-5xl dark:text-slate-200 text-center">
+      <div className="z-10 flex h-full w-full flex-col items-start justify-end space-y-2 bg-slate-950 pt-4">
+        <p className="text-center text-5xl dark:text-slate-200">
           Organize-se de maneira inteligente.
         </p>
         <p className="text-justify text-sm dark:text-slate-500">
@@ -44,7 +45,11 @@ function Welcome() {
         </p>
       </div>
       <div className="mt-8 mb-4 flex w-full items-center justify-center">
-        <Button className="w-full bg-aquamarine-400 hover:bg-aquamarine-500" size={"lg"} variant={"default"}>
+        <Button
+          className="bg-aquamarine-400 hover:bg-aquamarine-500 w-full"
+          size={"lg"}
+          variant={"default"}
+        >
           <Link className="w-full" to={"/login"}>
             Começar
           </Link>
@@ -55,11 +60,12 @@ function Welcome() {
           Se ainda não possui uma conta.
         </p>
         <Link
-          className="text-xs duration-150 ease-in-out dark:text-aquamarine-300 dark:hover:text-aquamarine-400"
+          className="dark:text-aquamarine-300 dark:hover:text-aquamarine-400 text-xs duration-150 ease-in-out"
           to={"/registro"}
         >
           Registre-se
         </Link>
+        <ThemeSwitch />
       </div>
     </div>
   );

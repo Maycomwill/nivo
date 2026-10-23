@@ -32,6 +32,10 @@ export default async function TransactionsRoutes(app: FastifyInstance) {
     id: z.uuid(),
   });
 
+  const getOneSchema = z.object({
+    transaction_id: z.cuid2(),
+  });
+
   app.post(
     "/create",
     {
@@ -259,9 +263,90 @@ export default async function TransactionsRoutes(app: FastifyInstance) {
           .from(transactionTable)
           .where(eq(transactionTable.owner_id, db_user[0].id));
 
+        return res.status(200).send({
+          message:
+            transactions.length === 0
+              ? "Nenhuma transação cadastrada"
+              : "Transações encontradas",
+          data: transactions,
+        });
+      } catch (error) {
+        if (error instanceof z.ZodError || error instanceof Error) {
+          return res.status(500).send({
+            message: error.message,
+            data: null,
+          });
+        }
+        req.log.error(error);
+
+        return res.status(500).send({
+          message: "Erro interno do servidor",
+          data: null,
+        });
+      }
+    },
+  );
+
+  app.get(
+    "/unique_transaction",
+    {
+      schema: {
+        tags: ["transaction"],
+        description: "Rota de buscar uma transação",
+        querystring: z.object({
+          transaction_id: z.cuid2(),
+        }),
+        response: {
+          200: z.object({
+            message: z.string(),
+            data: z.array(
+              z.object({
+                id: z.cuid2(),
+                amount: z.number(),
+                category: z.string(),
+                owner_id: z.uuid(),
+                description: z.string(),
+                date: z.date(),
+                operation: zodEnumOperation,
+                fixed: z.boolean(),
+              }),
+            ),
+          }),
+          400: z.object({
+            message: z.string(),
+            data: z.null(),
+          }),
+          500: z.object({
+            message: z.string(),
+            data: z.null(),
+          }),
+        },
+      },
+    },
+    async (req, res) => {
+      const { transaction_id } = getOneSchema.parse(req.query);
+      console.log(transaction_id);
+      if (transaction_id === null || transaction_id === undefined) {
+        return res.status(400).send({
+          message: "Transaction Id inválido",
+          data: null,
+        });
+      }
+      try {
+        const transaction = await db
+          .select()
+          .from(transactionTable)
+          .where(eq(transactionTable.id, transaction_id));
+        if (!transaction[0]) {
+          return res.status(400).send({
+            message: "Transação não encontrada",
+            data: null,
+          });
+        }
+
         return res
           .status(200)
-          .send({ message: transactions.length === 0 ? "Nenhuma transação cadastrada": "Transações encontradas", data: transactions });
+          .send({ message: "Transação encontrada", data: transaction });
       } catch (error) {
         if (error instanceof z.ZodError || error instanceof Error) {
           return res.status(500).send({

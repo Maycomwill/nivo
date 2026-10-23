@@ -17,6 +17,9 @@ export function TransactionContextProvider({
   const [transactions, setTransactions] = useState<
     z.infer<typeof TransactionSchema>[]
   >([]);
+  const [transaction, setTransaction] = useState<
+    z.infer<typeof TransactionSchema>
+  >();
   async function getAllTransactions(id: string) {
     handleLoading(true);
     try {
@@ -51,8 +54,30 @@ export function TransactionContextProvider({
     }
   }
 
+  async function getOneTransaction(id: string) {
+    handleLoading(true);
+    try {
+      console.log(id);
+      const result = await api.get(
+        `/transaction/unique_transaction?transaction_id=${id}`,
+      );
+      const response = GetTransactionsResponseSchema.parse(result.data);
+      console.log(response);
+    } catch (error) {
+      if (error instanceof z.ZodError || error instanceof Error) {
+        console.log(error);
+        setTransactions([]);
+        return handleLoading(false);
+      }
+      setTransactions([]);
+      return handleLoading(false);
+    }
+  }
+
   return (
-    <TransactionContext.Provider value={{ getAllTransactions, transactions }}>
+    <TransactionContext.Provider
+      value={{ getAllTransactions, getOneTransaction, transactions }}
+    >
       {children}
     </TransactionContext.Provider>
   );
