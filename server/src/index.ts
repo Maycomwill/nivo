@@ -30,6 +30,7 @@ app.setSerializerCompiler(serializerCompiler);
 await app.register(cors, {
   origin: "*",
   methods: ["POST", "GET", "DELETE", "PUT"],
+  credentials: true
 });
 
 await app.register(import("@fastify/swagger"), {
@@ -66,14 +67,14 @@ await app.register(import("@fastify/swagger-ui"), {
 });
 
 await app.register(AuthRoutes, {
-  prefix: "/auth",
+  prefix: "/v1/auth",
 });
 await app.register(TransactionsRoutes, {
-  prefix: "/transaction",
+  prefix: "/v1/transaction",
 });
 
 app.get(
-  "/",
+  "/v1",
   {
     schema: {
       description: "Rota de teste",

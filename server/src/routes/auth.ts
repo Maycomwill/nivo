@@ -31,32 +31,32 @@ export default async function AuthRoutes(app: FastifyInstance) {
         response: {
           200: z.object({
             message: z.string(),
-            data: z.object({
-              token: z.string(),
-              user: z.object({
+            token: z.string(),
+            exp: z.number(),
+            user:
+              z.object({
                 email: z.email(),
                 id: z.uuid(),
                 name: z.string(),
-              }),
-            }),
+              }) || z.null(),
           }),
           400: z.object({
             message: z.string(),
-            data:
-              z.object({
-                field: z.string(),
-                message: z.string(),
-              }) || z.null(),
+            token: z.string(),
+            exp: z.number(),
+            user: z.null(),
           }),
           404: z.object({
             message: z.string(),
+            token: z.string(),
+            exp: z.number(),
+            user: z.null(),
           }),
           500: z.object({
             message: z.string(),
-            data:
-              z.object({
-                field: z.string(),
-              }) || z.null(),
+            token: z.string(),
+            exp: z.number(),
+            user: z.null(),
           }),
         },
       },
@@ -67,10 +67,9 @@ export default async function AuthRoutes(app: FastifyInstance) {
         if (!result.success) {
           return res.status(400).send({
             message: "Dados inválidos",
-            data: result.error.issues.map((issue) => ({
-              field: issue.path.join("."),
-              message: issue.message,
-            })),
+            token: "",
+            exp: 0,
+            user: null,
           });
         }
 
@@ -87,6 +86,9 @@ export default async function AuthRoutes(app: FastifyInstance) {
           console.log("USUÁRIO NÃO ENCONTRADO");
           return res.status(404).send({
             message: "Usuário inexistente",
+            token: "",
+            exp: 0,
+            user: null,
           });
         }
 
@@ -109,28 +111,35 @@ export default async function AuthRoutes(app: FastifyInstance) {
           },
           remember,
         });
+        const verify_token = services.verify_token(token);
+        console.log(verify_token);
 
         return res.status(200).send({
           message: "Login autorizado",
-          data: {
-            token,
-            user: {
-              id: current_user.id,
-              email: current_user.email,
-              name: current_user.name,
-            },
+          token,
+          exp: verify_token.data!.exp,
+          user: {
+            id: current_user.id,
+            email: current_user.email,
+            name: current_user.name,
           },
         });
       } catch (error) {
         if (error instanceof z.ZodError || error instanceof Error) {
           return res.status(500).send({
             message: error.message,
+            token: "",
+            exp: 0,
+            user: null,
           });
         }
         req.log.error(error);
 
         return res.status(500).send({
           message: "Erro interno do servidor",
+          token: "",
+          exp: 0,
+          user: null,
         });
       }
     },
@@ -215,12 +224,22 @@ export default async function AuthRoutes(app: FastifyInstance) {
         response: {
           200: z.object({
             message: z.string(),
+            token: z.string(),
+            data: z.object({
+              email: z.email(),
+              id: z.uuid(),
+              name: z.string(),
+              iat: z.number(),
+              exp: z.number(),
+            }),
           }),
           400: z.object({
             message: z.string(),
+            data: z.null(),
           }),
           500: z.object({
             message: z.string(),
+            data: z.null(),
           }),
         },
       },
@@ -242,7 +261,17 @@ export default async function AuthRoutes(app: FastifyInstance) {
             .status(400)
             .send({ message: "Token inválido", data: null });
         }
-        return res.status(200).send({ message: "Token válido", data: decoded });
+        return res.status(200).send({
+          message: "Token válido",
+          token,
+          data: {
+            name: decoded.data.name,
+            email: decoded.data.email,
+            id: decoded.data.id,
+            iat: decoded.data.iat,
+            exp: decoded.data.exp,
+          },
+        });
       } catch (error) {
         if (error instanceof z.ZodError || error instanceof Error) {
           return res.status(500).send({

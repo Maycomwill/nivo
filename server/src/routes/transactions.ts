@@ -1,6 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
-import { operationEnum, transactionTable } from "../db/schema";
+import { operationEnum, transactionTable, usersTable } from "../db/schema";
 import { db } from "..";
 import { eq } from "drizzle-orm";
 
@@ -27,6 +27,9 @@ export default async function TransactionsRoutes(app: FastifyInstance) {
     operation: zodEnumOperation,
     date: z.coerce.date().nullable(),
     fixed: z.boolean().default(false).nullable(),
+  });
+  const getSchema = z.object({
+    id: z.uuid(),
   });
 
   app.post(
@@ -177,6 +180,88 @@ export default async function TransactionsRoutes(app: FastifyInstance) {
         return res.status(200).send({
           message: "Transação deletada",
         });
+      } catch (error) {
+        if (error instanceof z.ZodError || error instanceof Error) {
+          return res.status(500).send({
+            message: error.message,
+            data: null,
+          });
+        }
+        req.log.error(error);
+
+        return res.status(500).send({
+          message: "Erro interno do servidor",
+          data: null,
+        });
+      }
+    },
+  );
+
+  app.get(
+    "/",
+    {
+      schema: {
+        tags: ["transaction"],
+        description: "Rota de buscar todas as transações do usuário",
+        querystring: z.object({
+          id: z.uuid(),
+        }),
+        response: {
+          200: z.object({
+            message: z.string(),
+            data: z.array(
+              z.object({
+                id: z.cuid2(),
+                amount: z.number(),
+                category: z.string(),
+                owner_id: z.uuid(),
+                description: z.string(),
+                date: z.date(),
+                operation: zodEnumOperation,
+                fixed: z.boolean(),
+              }),
+            ),
+          }),
+          400: z.object({
+            message: z.string(),
+            data: z.null(),
+          }),
+          500: z.object({
+            message: z.string(),
+            data: z.null(),
+          }),
+        },
+      },
+    },
+    async (req, res) => {
+      const { id } = getSchema.parse(req.query);
+      if (id === null || id === undefined) {
+        return res.status(400).send({
+          message: "Id inválido",
+          data: null,
+        });
+      }
+      try {
+        const db_user = await db
+          .select()
+          .from(usersTable)
+          .where(eq(usersTable.id, id))
+          .limit(1);
+
+        if (!db_user[0]) {
+          return res.status(400).send({
+            message: "Id inválido",
+            data: null,
+          });
+        }
+        const transactions = await db
+          .select()
+          .from(transactionTable)
+          .where(eq(transactionTable.owner_id, db_user[0].id));
+
+        return res
+          .status(200)
+          .send({ message: transactions.length === 0 ? "Nenhuma transação cadastrada": "Transações encontradas", data: transactions });
       } catch (error) {
         if (error instanceof z.ZodError || error instanceof Error) {
           return res.status(500).send({

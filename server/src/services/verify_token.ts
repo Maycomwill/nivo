@@ -25,6 +25,8 @@ export default function VerifyToken(token: string) {
       return { valid: false, data: null };
     }
 
+    console.log(payload)
+
     return {
       valid: true,
       data: payload as JwtPayload,
