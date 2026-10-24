@@ -24,6 +24,12 @@ const TransactionSchema = z.object({
   fixed: z.boolean(),
 });
 
+const BalanceSchema = z.object({
+  balance: z.number(),
+  incomes: z.number(),
+  expenses: z.number(),
+});
+
 const GetTransactionsResponseSchema = z.object({
   message: z.string(),
   data: z.array(
@@ -78,6 +84,7 @@ export {
   UserSchema,
   LoginSchema,
   TransactionSchema,
+  BalanceSchema,
   VerifyResponseSchema,
   LoginResponseSchema,
   UserLoginResponseSchema,

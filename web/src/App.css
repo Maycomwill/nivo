@@ -51,6 +51,20 @@
   --color-scooter-800: #186072;
   --color-scooter-900: #185061;
   --color-scooter-950: #0a3442;
+
+
+  --animate-page-up: page-up 1s cubic-bezier(.25,.17,.34,.96);
+
+  @keyframes page-up {
+    0% {
+      transform: translate(0, 1000px)
+    }
+
+    100% {
+      transform: translate(0, 0px)
+    }
+
+  }
 }
 
 @theme inline {

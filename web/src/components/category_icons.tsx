@@ -9,26 +9,32 @@ import {
   CoinsIcon,
   BlocksIcon,
 } from "lucide-react";
-function CategoryIcons({ category }: { category: string }) {
+function CategoryIcons({
+  category,
+  size = 14,
+}: {
+  category: string;
+  size?: number;
+}) {
   if (category === "contas") {
-    return <ReceiptIcon size={14} />;
+    return <ReceiptIcon size={size} />;
   } else if (category === "carro") {
-    return <CarIcon size={14} />;
+    return <CarIcon size={size} />;
   } else if (category === "moto") {
-    return <MotorbikeIcon size={14} />;
+    return <MotorbikeIcon size={size} />;
   } else if (category === "alimentação") {
-    return <UtensilsIcon size={14} />;
+    return <UtensilsIcon size={size} />;
   } else if (category === "compras") {
-    return <ShoppingBagIcon size={14} />;
+    return <ShoppingBagIcon size={size} />;
   } else if (category === "cartão") {
-    return <CreditCardIcon size={14} />;
+    return <CreditCardIcon size={size} />;
   } else if (category === "investimentos") {
-    return <PiggyBankIcon size={14} />;
+    return <PiggyBankIcon size={size} />;
   } else if (category === "salário") {
-    return <CoinsIcon size={14} />;
+    return <CoinsIcon size={size} />;
   }
 
-  return <BlocksIcon size={14} />;
+  return <BlocksIcon size={size} />;
 }
 
 export default CategoryIcons;

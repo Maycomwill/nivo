@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router";
-import NivoLogo from "/nivo.svg";
+import NivoLogo from "@/nivo.svg";
 import { ArrowLeft } from "lucide-react";
 import LoginForm from "@/components/forms/login";
 import { Button } from "@/components/ui/button";

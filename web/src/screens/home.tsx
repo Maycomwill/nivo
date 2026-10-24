@@ -11,7 +11,7 @@ import { useEffect } from "react";
 function Home() {
   const { user } = useAuth();
   const { loading } = useLoading();
-  const { getAllTransactions, transactions } = useTransaction();
+  const { getAllTransactions, transactions, balance } = useTransaction();
   useEffect(() => {
     if (!user) {
       return;
@@ -27,6 +27,42 @@ function Home() {
       Home
       <div className="flex w-full flex-col">
         {loading && <ComponentLoading />}
+        <div className="flex flex-col">
+          <p className="text-xs">Balanço do mês</p>
+          <span className="text-4xl">
+            {balance?.balance.toLocaleString("pt-BR", {
+              style: "currency",
+              currency: "BRL",
+              maximumFractionDigits: 2,
+              minimumFractionDigits: 2,
+            })}
+          </span>
+
+          <div className="mt-4 flex space-x-4">
+            <div className="border-aquamarine-300 flex flex-col border-l-2 px-2">
+              <p className="text-xs">Entradas</p>
+              <span className="text-sm">
+                {balance?.incomes.toLocaleString("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
+                  maximumFractionDigits: 2,
+                  minimumFractionDigits: 2,
+                })}
+              </span>
+            </div>
+            <div className="border-brilliant-rose-600 flex flex-col border-l-2 px-2">
+              <p className="text-xs">Saídas</p>
+              <span className="text-sm">
+                {balance?.expenses.toLocaleString("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
+                  maximumFractionDigits: 2,
+                  minimumFractionDigits: 2,
+                })}
+              </span>
+            </div>
+          </div>
+        </div>
         <section
           className={cn(
             "relative flex w-full flex-col items-center justify-center",

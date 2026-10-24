@@ -2,7 +2,7 @@ import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { operationEnum, transactionTable, usersTable } from "../db/schema";
 import { db } from "..";
-import { eq } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 
 export default async function TransactionsRoutes(app: FastifyInstance) {
   const zodEnumOperation = z.enum(operationEnum.enumValues);
@@ -261,7 +261,8 @@ export default async function TransactionsRoutes(app: FastifyInstance) {
         const transactions = await db
           .select()
           .from(transactionTable)
-          .where(eq(transactionTable.owner_id, db_user[0].id));
+          .where(eq(transactionTable.owner_id, db_user[0].id))
+          .orderBy(asc(transactionTable.date));
 
         return res.status(200).send({
           message:

@@ -1,6 +1,6 @@
 // import ThemeSwitch from "@/functions/theme_switch";
 import { Button } from "@/components/ui/button";
-import NivoLogo from "../../public/nivo.svg";
+import NivoLogo from "@/nivo.svg";
 import { Link } from "react-router";
 import ThemeSwitch from "@/functions/theme_switch";
 function Welcome() {
