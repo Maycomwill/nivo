@@ -8,6 +8,7 @@ import {
   PiggyBankIcon,
   CoinsIcon,
   BlocksIcon,
+  LandmarkIcon,
 } from "lucide-react";
 function CategoryIcons({
   category,
@@ -32,6 +33,8 @@ function CategoryIcons({
     return <PiggyBankIcon size={size} />;
   } else if (category === "salário") {
     return <CoinsIcon size={size} />;
+  } else if (category ===   "financiamento"){
+    return <LandmarkIcon size={size} />
   }
 
   return <BlocksIcon size={size} />;

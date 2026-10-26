@@ -26,3 +26,22 @@ export interface TransactionProps {
   operation: "expense" | "income";
   fixed: boolean;
 }
+
+export interface AddTransactionProps {
+  amount: string;
+  category:
+    | "salário"
+    | "contas"
+    | "investimentos"
+    | "cartão"
+    | "alimentação"
+    | "compras"
+    | "carro"
+    | "moto"
+    | "outros"
+    | "financiamento";
+  description: string;
+  date: Date;
+  operation: "expense" | "income";
+  fixed: boolean;
+}

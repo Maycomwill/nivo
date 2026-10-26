@@ -1,15 +1,21 @@
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
-import { operationEnum, transactionTable, usersTable } from "../db/schema";
+import {
+  categoriesEnum,
+  operationEnum,
+  transactionTable,
+  usersTable,
+} from "../db/schema";
 import { db } from "..";
 import { asc, eq } from "drizzle-orm";
 
 export default async function TransactionsRoutes(app: FastifyInstance) {
   const zodEnumOperation = z.enum(operationEnum.enumValues);
+  const zodEnumCategories = z.enum(categoriesEnum.enumValues);
   const createSchema = z.object({
     description: z.string(),
     amount: z.number(),
-    category: z.string(),
+    category: zodEnumCategories,
     owner_id: z.uuid(),
     operation: zodEnumOperation,
     date: z.coerce.date(),
@@ -22,7 +28,7 @@ export default async function TransactionsRoutes(app: FastifyInstance) {
     id: z.cuid2(),
     description: z.string().nullable(),
     amount: z.number().nullable(),
-    category: z.string().nullable(),
+    category: zodEnumCategories.nullable(),
     owner_id: z.uuid().nullable(),
     operation: zodEnumOperation,
     date: z.coerce.date().nullable(),
@@ -69,7 +75,9 @@ export default async function TransactionsRoutes(app: FastifyInstance) {
     async (req, res) => {
       type NewTansaction = typeof transactionTable.$inferInsert;
       try {
+        console.log("pré parse: ", req.body);
         const result = createSchema.safeParse(req.body);
+        console.log("pós parse: ", result);
 
         if (!result.success) {
           return res.status(400).send({

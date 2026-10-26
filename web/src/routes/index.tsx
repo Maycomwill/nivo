@@ -5,6 +5,7 @@ import useAuth from "@/hooks/useAuth";
 import Home from "@/screens/home";
 import Registro from "@/screens/registro";
 import Transaction from "@/screens/transaction";
+import AddTransaction from "@/screens/add_transaction";
 
 function CustomRouter() {
   const { auth } = useAuth();
@@ -15,6 +16,7 @@ function CustomRouter() {
       <Route path="/login" element={<Login />} />
       <Route path="/registro" element={<Registro />} />
       <Route path="/transaction/:transaction_id" element={<Transaction />}/>
+      <Route path="/add" element={<AddTransaction />}/>
     </Routes>
   );
 }

@@ -1,12 +1,15 @@
 import ComponentLoading from "@/components/component_loading";
 import Logoff from "@/components/logoff";
 import Table from "@/components/transaction/table";
+import { Button } from "@/components/ui/button";
 import useAuth from "@/hooks/useAuth";
 import useLoading from "@/hooks/useLoading";
 import useTransaction from "@/hooks/useTransaction";
 
 import { cn } from "cn";
+import { PlusCircleIcon } from "lucide-react";
 import { useEffect } from "react";
+import { Link } from "react-router";
 
 function Home() {
   const { user } = useAuth();
@@ -60,6 +63,16 @@ function Home() {
                   minimumFractionDigits: 2,
                 })}
               </span>
+            </div>
+            <div className="flex flex-1 items-center justify-end">
+              <Button size={"icon-xl"} variant={"ghost"} className="rounded-full">
+                <Link
+                  className="flex items-center justify-center"
+                  to={"/add"}
+                >
+                  <PlusCircleIcon size={24} className="size-9" color="#60f3af" />
+                </Link>
+              </Button>
             </div>
           </div>
         </div>

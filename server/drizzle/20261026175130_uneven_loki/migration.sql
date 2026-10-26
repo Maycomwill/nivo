@@ -1,0 +1,2 @@
+CREATE TYPE "category" AS ENUM('salário', 'contas', 'investimentos', 'cartão', 'alimentação', 'compras', 'carro', 'moto', 'outros');--> statement-breakpoint
+ALTER TABLE "transactions" ALTER COLUMN "category" SET DATA TYPE "category" USING "category"::"category";

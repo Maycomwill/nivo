@@ -13,6 +13,18 @@ import { defineRelations } from "drizzle-orm";
 import { createId } from "@paralleldrive/cuid2";
 
 export const operationEnum = pgEnum("operation", ["income", "expense"]);
+export const categoriesEnum = pgEnum("category", [
+  "salário",
+  "contas",
+  "investimentos",
+  "cartão",
+  "alimentação",
+  "compras",
+  "carro",
+  "moto",
+  "outros",
+  "financiamento",
+]);
 
 export const usersTable = pgTable("users", {
   id: uuid().defaultRandom().primaryKey(),
@@ -28,7 +40,7 @@ export const transactionTable = pgTable("transactions", {
     .$defaultFn(() => createId())
     .primaryKey(),
   amount: real(),
-  category: text().notNull(),
+  category: categoriesEnum("category").notNull(),
   owner_id: uuid().notNull(),
   description: text(),
   date: timestamp({ withTimezone: true }),

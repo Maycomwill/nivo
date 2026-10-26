@@ -1,5 +1,30 @@
 import { z } from "zod";
 export const operationEnum = z.enum(["income", "expense"]);
+export const categories = [
+  "salário",
+  "contas",
+  "investimentos",
+  "financiamento",
+  "cartão",
+  "alimentação",
+  "compras",
+  "carro",
+  "moto",
+  "outros",
+];
+
+export const categoriesSchema = z.enum([
+  "salário",
+  "contas",
+  "investimentos",
+  "cartão",
+  "alimentação",
+  "compras",
+  "carro",
+  "moto",
+  "outros",
+  "financiamento",
+]);
 
 const UserSchema = z.object({
   email: z.email(),
@@ -79,6 +104,9 @@ const UserLoginResponseSchema = z.object({
 const RegisterResponseSchema = z.object({
   message: z.string(),
 });
+const AddTransactionResponseSchema = z.object({
+  message: z.string(),
+});
 
 export {
   UserSchema,
@@ -90,4 +118,5 @@ export {
   UserLoginResponseSchema,
   RegisterResponseSchema,
   GetTransactionsResponseSchema,
+  AddTransactionResponseSchema,
 };
