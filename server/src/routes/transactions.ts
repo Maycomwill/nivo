@@ -7,7 +7,7 @@ import {
   usersTable,
 } from "../db/schema";
 import { db } from "..";
-import { asc, eq } from "drizzle-orm";
+import { and, asc, eq, gte, lt } from "drizzle-orm";
 
 export default async function TransactionsRoutes(app: FastifyInstance) {
   const zodEnumOperation = z.enum(operationEnum.enumValues);
@@ -35,6 +35,12 @@ export default async function TransactionsRoutes(app: FastifyInstance) {
     fixed: z.boolean().default(false).nullable(),
   });
   const getSchema = z.object({
+    id: z.uuid(),
+  });
+
+  const getMonthSchema = z.object({
+    month: z.number(),
+    year: z.number(),
     id: z.uuid(),
   });
 
@@ -225,7 +231,7 @@ export default async function TransactionsRoutes(app: FastifyInstance) {
               z.object({
                 id: z.cuid2(),
                 amount: z.number(),
-                category: z.string(),
+                category: zodEnumCategories,
                 owner_id: z.uuid(),
                 description: z.string(),
                 date: z.date(),
@@ -270,6 +276,104 @@ export default async function TransactionsRoutes(app: FastifyInstance) {
           .select()
           .from(transactionTable)
           .where(eq(transactionTable.owner_id, db_user[0].id))
+          .orderBy(asc(transactionTable.date));
+
+        return res.status(200).send({
+          message:
+            transactions.length === 0
+              ? "Nenhuma transação cadastrada"
+              : "Transações encontradas",
+          data: transactions,
+        });
+      } catch (error) {
+        if (error instanceof z.ZodError || error instanceof Error) {
+          return res.status(500).send({
+            message: error.message,
+            data: null,
+          });
+        }
+        req.log.error(error);
+
+        return res.status(500).send({
+          message: "Erro interno do servidor",
+          data: null,
+        });
+      }
+    },
+  );
+
+  app.get(
+    "/month",
+    {
+      schema: {
+        tags: ["transaction"],
+        description: "Rota de buscar todas as transações do usuário",
+        querystring: z.object({
+          id: z.uuid(),
+          month: z.coerce.number().int().min(1).max(12),
+          year: z.coerce.number().int().min(2000).max(2100),
+        }),
+        response: {
+          200: z.object({
+            message: z.string(),
+            data: z.array(
+              z.object({
+                id: z.cuid2(),
+                amount: z.number(),
+                category: zodEnumCategories,
+                owner_id: z.uuid(),
+                description: z.string(),
+                date: z.date(),
+                operation: zodEnumOperation,
+                fixed: z.boolean(),
+              }),
+            ),
+          }),
+          400: z.object({
+            message: z.string(),
+            data: z.null(),
+          }),
+          500: z.object({
+            message: z.string(),
+            data: z.null(),
+          }),
+        },
+      },
+    },
+    async (req, res) => {
+      const { id, month, year } = getMonthSchema.parse(req.query);
+      if (id === null || id === undefined) {
+        return res.status(400).send({
+          message: "Id inválido",
+          data: null,
+        });
+      }
+
+      const startDate = new Date(year, month - 1, 1);
+      const endDate = new Date(year, month, 1);
+      try {
+        const db_user = await db
+          .select()
+          .from(usersTable)
+          .where(eq(usersTable.id, id))
+          .limit(1);
+
+        if (!db_user[0]) {
+          return res.status(400).send({
+            message: "Id inválido",
+            data: null,
+          });
+        }
+        const transactions = await db
+          .select()
+          .from(transactionTable)
+          .where(
+            and(
+              eq(transactionTable.owner_id, id),
+              gte(transactionTable.date, startDate),
+              lt(transactionTable.date, endDate),
+            ),
+          )
           .orderBy(asc(transactionTable.date));
 
         return res.status(200).send({

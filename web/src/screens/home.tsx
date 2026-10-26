@@ -14,12 +14,13 @@ import { Link } from "react-router";
 function Home() {
   const { user } = useAuth();
   const { loading } = useLoading();
-  const { getAllTransactions, transactions, balance } = useTransaction();
+  const { getAllTransactionsFromOneMonth, transactions, balance } =
+    useTransaction();
   useEffect(() => {
     if (!user) {
       return;
     }
-    getAllTransactions(user.id);
+    getAllTransactionsFromOneMonth(user.id);
   }, []);
   return (
     <div className="flex w-full flex-1 flex-col items-start justify-start p-4">
@@ -27,7 +28,6 @@ function Home() {
         <p className="capitalize">Olá, {user!.name.slice(0)}</p>
         <Logoff />
       </section>
-      Home
       <div className="flex w-full flex-col">
         {loading && <ComponentLoading />}
         <div className="flex flex-col">
@@ -65,12 +65,17 @@ function Home() {
               </span>
             </div>
             <div className="flex flex-1 items-center justify-end">
-              <Button size={"icon-xl"} variant={"ghost"} className="rounded-full">
-                <Link
-                  className="flex items-center justify-center"
-                  to={"/add"}
-                >
-                  <PlusCircleIcon size={24} className="size-9" color="#60f3af" />
+              <Button
+                size={"icon-xl"}
+                variant={"ghost"}
+                className="rounded-full"
+              >
+                <Link className="flex items-center justify-center" to={"/add"}>
+                  <PlusCircleIcon
+                    size={24}
+                    className="size-9"
+                    color="#60f3af"
+                  />
                 </Link>
               </Button>
             </div>

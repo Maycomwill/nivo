@@ -92,6 +92,46 @@ export function TransactionContextProvider({
       return handleLoading(false);
     }
   }
+  async function getAllTransactionsFromOneMonth(id: string) {
+    handleLoading(true);
+    const month = new Date().getMonth()+1
+    const year = new Date().getFullYear()
+    try {
+      const result = await api.get("transaction/month", {
+        params: {
+          id,
+          month,
+          year
+        },
+      });
+      if (result.status === 400) {
+        handleLoading(false);
+        setTransactions([]);
+        return;
+      }
+      // console.log(result.data);
+      const { data } = GetTransactionsResponseSchema.parse(result.data);
+      if (!data) {
+        handleLoading(false);
+        setTransactions([]);
+        return;
+      }
+
+      setTransactions(data);
+
+      handleBalance({ transactions: data });
+
+      return handleLoading(false);
+    } catch (error) {
+      if (error instanceof z.ZodError || error instanceof Error) {
+        console.log(error);
+        setTransactions([]);
+        return handleLoading(false);
+      }
+      setTransactions([]);
+      return handleLoading(false);
+    }
+  }
 
   async function getOneTransaction(id: string) {
     handleLoading(true);
@@ -177,6 +217,7 @@ export function TransactionContextProvider({
   return (
     <TransactionContext.Provider
       value={{
+        getAllTransactionsFromOneMonth,
         getAllTransactions,
         getOneTransaction,
         deleteOneTransaction,
