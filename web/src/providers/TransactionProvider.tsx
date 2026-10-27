@@ -9,8 +9,6 @@ import {
   TransactionSchema,
 } from "@/lib/schemas";
 import type { AddTransactionProps, TransactionProps } from "@/lib/types";
-// import { format } from "date-fns";
-// import { ptBR } from "date-fns/locale";
 import { useState, type ReactNode } from "react";
 import { z } from "zod";
 
@@ -201,13 +199,22 @@ export function TransactionContextProvider({
       console.log(user_id);
       const converted_amout = Number(data.amount);
       console.log(data, converted_amout);
-      // const converted_date = format(data.date, "yyyy-MM-dd", {locale: ptBR}) 
+      const converted_date = new Date(
+        data.date.getFullYear(),
+        data.date.getMonth(),
+        data.date.getDate(),
+        12,
+        0,
+        0,
+      );
+
+      // console.log(converted_date);
       const result = await api.post("/transaction/create", {
         description: data.description,
         amount: converted_amout,
         category: data.category,
         operation: data.operation,
-        date: data.date.toDateString(),
+        date: converted_date,
         fixed: data.fixed,
         owner_id: user_id,
       });
