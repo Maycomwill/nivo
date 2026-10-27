@@ -33,7 +33,7 @@ const formSchema = z.object({
 });
 
 function AddTransactionForm() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const { addTransaction } = useTransaction();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -51,7 +51,7 @@ function AddTransactionForm() {
 
   async function onSubmit(payload: z.infer<typeof formSchema>) {
     await addTransaction(payload);
-    navigate(-1)
+    navigate(-1);
     return;
   }
   return (
@@ -198,6 +198,9 @@ function AddTransactionForm() {
                         mode="single"
                         selected={field.value}
                         onSelect={field.onChange}
+                        timeZone={
+                          Intl.DateTimeFormat().resolvedOptions().timeZone
+                        }
                       />
                     </PopoverContent>
                   </Popover>

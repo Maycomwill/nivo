@@ -54,6 +54,7 @@ function HomeFilter() {
             onSelect={(e) => handleSelect(e)}
             captionLayout="dropdown"
             className="w-full"
+            timeZone={Intl.DateTimeFormat().resolvedOptions().timeZone}
           />
         </div>
       </DialogContent>

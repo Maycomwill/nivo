@@ -92,7 +92,7 @@ function Home() {
         </div>
         <section
           className={cn(
-            "relative flex w-full flex-col items-center justify-center",
+            "relative flex w-full overflow-x-hidden flex-col items-center justify-center",
             loading && "blur-xs",
           )}
         >

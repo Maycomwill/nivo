@@ -43,7 +43,7 @@ function Table({ transactions }: { transactions: TransactionProps[] }) {
     month = "dezembro";
   }
   return (
-    <UITable>
+    <UITable className="overflow-x-hidden">
       <TableCaption>
         Suas movimentações no mês de {month}{searchYear && "/"+searchYear.slice(2, 4)}
       </TableCaption>
@@ -63,8 +63,8 @@ function Table({ transactions }: { transactions: TransactionProps[] }) {
                 <CategoryIcons category={transaction.category} />
               </TableCell>
               <TableCell className="font-medium capitalize">
-                {transaction.description.length >= 30
-                  ? transaction.description.slice(0, 25) + "..."
+                {transaction.description.length >= 20
+                  ? transaction.description.slice(0, 15) + "..."
                   : transaction.description}
               </TableCell>
               <TableCell className="text-right">
