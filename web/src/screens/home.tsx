@@ -9,28 +9,40 @@ import useTransaction from "@/hooks/useTransaction";
 import { cn } from "cn";
 import { PlusCircleIcon } from "lucide-react";
 import { useEffect } from "react";
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
+import HomeFilter from "@/components/popover/home_filter";
 
 function Home() {
   const { user } = useAuth();
+  const [params, setParams] = useSearchParams();
   const { loading } = useLoading();
   const { getAllTransactionsFromOneMonth, transactions, balance } =
     useTransaction();
   useEffect(() => {
     if (!user) {
+      setParams();
       return;
     }
-    getAllTransactionsFromOneMonth(user.id);
-  }, []);
+    getAllTransactionsFromOneMonth(
+      user.id,
+      params.get("month"),
+      params.get("year"),
+    );
+  }, [params]);
   return (
     <div className="flex w-full flex-1 flex-col items-start justify-start p-4">
       <section className="flex w-full items-center justify-between">
         <p className="capitalize">Olá, {user!.name.slice(0)}</p>
         <Logoff />
       </section>
-      <div className="flex w-full flex-col">
-        {loading && <ComponentLoading />}
-        <div className="flex flex-col">
+      <div className="flex flex-1 relative w-full flex-col">
+        {loading && (
+          <div className="flex h-full absolute w-full items-center justify-center">
+            <ComponentLoading />
+          </div>
+        )}
+
+        <div className={cn("flex flex-col", loading && "blur-xs")}>
           <p className="text-xs">Balanço do mês</p>
           <span className="text-4xl">
             {balance?.balance.toLocaleString("pt-BR", {
@@ -65,17 +77,14 @@ function Home() {
               </span>
             </div>
             <div className="flex flex-1 items-center justify-end">
+              <HomeFilter />
               <Button
                 size={"icon-xl"}
                 variant={"ghost"}
                 className="rounded-full"
               >
                 <Link className="flex items-center justify-center" to={"/add"}>
-                  <PlusCircleIcon
-                    size={24}
-                    className="size-9"
-                    color="#60f3af"
-                  />
+                  <PlusCircleIcon className="size-7" color="#60f3af" />
                 </Link>
               </Button>
             </div>

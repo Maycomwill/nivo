@@ -92,16 +92,28 @@ export function TransactionContextProvider({
       return handleLoading(false);
     }
   }
-  async function getAllTransactionsFromOneMonth(id: string) {
+  async function getAllTransactionsFromOneMonth(
+    id: string,
+    month: string | null,
+    year: string | null,
+  ) {
     handleLoading(true);
-    const month = new Date().getMonth()+1
-    const year = new Date().getFullYear()
+    let newMonth;
+    let newYear;
+    if (month === null || year === null) {
+      const date = new Date();
+      newMonth = date.getMonth() + 1;
+      newYear = date.getFullYear();
+    } else {
+      newMonth = month;
+      newYear = year;
+    }
     try {
       const result = await api.get("transaction/month", {
         params: {
           id,
-          month,
-          year
+          month: Number(newMonth),
+          year: Number(newYear),
         },
       });
       if (result.status === 400) {

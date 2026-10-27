@@ -8,7 +8,11 @@ export interface TransactionContextProps {
   transaction: z.infer<typeof TransactionSchema> | undefined;
   balance: z.infer<typeof BalanceSchema> | undefined;
   getAllTransactions: (id: string) => void;
-  getAllTransactionsFromOneMonth: (id: string) => void;
+  getAllTransactionsFromOneMonth: (
+    id: string,
+    month: string | null,
+    year: string | null,
+  ) => void;
   getOneTransaction: (transaction_id: string) => void;
   deleteOneTransaction: (id: string) => void;
   addTransaction: (data: AddTransactionProps) => Promise<void>;

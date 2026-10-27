@@ -10,12 +10,43 @@ import {
 import type { TransactionProps } from "@/lib/types";
 import CategoryIcons from "../category_icons";
 import { Edit2 } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 
 function Table({ transactions }: { transactions: TransactionProps[] }) {
+  const [searchParams] = useSearchParams();
+  const searchMonth = searchParams.get("month");
+  const searchYear = searchParams.get("year");
+  let month = searchMonth;
+  if (month === "1") {
+    month = "janeiro";
+  } else if (month === "2") {
+    month = "fevereiro";
+  } else if (month === "3") {
+    month = "março";
+  } else if (month === "4") {
+    month = "abril";
+  } else if (month === "5") {
+    month = "maio";
+  } else if (month === "6") {
+    month = "junho";
+  } else if (month === "7") {
+    month = "julho";
+  } else if (month === "8") {
+    month = "agosto";
+  } else if (month === "9") {
+    month = "setembro";
+  } else if (month === "10") {
+    month = "outubro";
+  } else if (month === "11") {
+    month = "novembro";
+  } else if (month === "12") {
+    month = "dezembro";
+  }
   return (
     <UITable>
-      <TableCaption>Suas movimentações no mês</TableCaption>
+      <TableCaption>
+        Suas movimentações no mês de {month}{searchYear && "/"+searchYear.slice(2, 4)}
+      </TableCaption>
       <TableHeader>
         <TableRow>
           <TableHead>Cat.</TableHead>
