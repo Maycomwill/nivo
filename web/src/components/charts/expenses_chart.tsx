@@ -1,5 +1,5 @@
 import type { CategoriesChartProps } from "@/lib/types";
-import { Pie, PieChart, Sector, type PieSectorShapeProps } from "recharts";
+import { Pie, PieChart } from "recharts";
 import {
   ChartContainer,
   ChartTooltip,
