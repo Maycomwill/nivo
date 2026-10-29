@@ -110,7 +110,12 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
   async function handleLogin(userData: UserLogin) {
     handleLoading(true);
     try {
-      const result = await api.post("auth/login", userData);
+      const email_trimed = userData.email.trim().toLowerCase();
+      const result = await api.post("auth/login", {
+        email: email_trimed,
+        password: userData.password,
+        remember: userData.remember,
+      });
       const response = LoginResponseSchema.parse(result.data);
       const user = UserSchema.parse(response.user);
       setUser(user);
@@ -152,7 +157,11 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
   async function handleRegister(userData: UserRegister) {
     handleLoading(true);
     try {
-      const result = await api.post("auth/register", userData);
+      const email_trimed = userData.email.trim().toLowerCase();
+      const result = await api.post("auth/register", {
+        ...userData,
+        email: email_trimed,
+      });
       const response = RegisterResponseSchema.parse(result.data);
       console.log(response);
       await sleep(2000);

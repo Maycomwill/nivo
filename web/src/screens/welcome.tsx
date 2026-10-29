@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import NivoLogo from "@/nivo.svg";
 import { Link } from "react-router";
-import ThemeSwitch from "@/functions/theme_switch";
+// import ThemeSwitch from "@/functions/theme_switch";
 function Welcome() {
   return (
     <div className="flex w-full flex-1 flex-col overflow-hidden p-4">
@@ -65,7 +65,7 @@ function Welcome() {
         >
           Registre-se
         </Link>
-        <ThemeSwitch />
+        {/* <ThemeSwitch /> */}
       </div>
     </div>
   );

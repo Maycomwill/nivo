@@ -1,12 +1,12 @@
-import { BalanceSchema, TransactionSchema } from "@/lib/schemas";
-import type { AddTransactionProps } from "@/lib/types";
+import { TransactionSchema } from "@/lib/schemas";
+import type { AddTransactionProps, BalanceProps } from "@/lib/types";
 import { createContext } from "react";
 import type { z } from "zod";
 
 export interface TransactionContextProps {
   transactions: z.infer<typeof TransactionSchema>[];
   transaction: z.infer<typeof TransactionSchema> | undefined;
-  balance: z.infer<typeof BalanceSchema> | undefined;
+  balance: BalanceProps | undefined;
   getAllTransactions: (id: string) => void;
   getAllTransactionsFromOneMonth: (
     id: string,

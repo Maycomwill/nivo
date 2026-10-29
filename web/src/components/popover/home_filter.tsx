@@ -35,8 +35,8 @@ function HomeFilter() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger
         render={
-          <Button size={"icon-xl"} variant={"ghost"} className="rounded-full">
-            <FilterIcon className="size-7" color="#60f3af" />
+          <Button size={"icon-sm"} variant={"ghost"} className="rounded-full">
+            <FilterIcon className="size-6" color="#60f3af" />
           </Button>
         }
       ></DialogTrigger>

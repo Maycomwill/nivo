@@ -12,6 +12,8 @@ import { useEffect } from "react";
 import { Link, useSearchParams } from "react-router";
 import HomeFilter from "@/components/popover/home_filter";
 
+import ExpensesChart from "@/components/charts/expenses_chart";
+
 function Home() {
   const { user } = useAuth();
   const [params, setParams] = useSearchParams();
@@ -32,12 +34,12 @@ function Home() {
   return (
     <div className="flex w-full flex-1 flex-col items-start justify-start p-4">
       <section className="flex w-full items-center justify-between">
-        <p className="capitalize">Olá, {user!.name.slice(0)}</p>
+        <p className="capitalize">Olá, {user!.name.trim().split(" ")[0]}</p>
         <Logoff />
       </section>
-      <div className="flex flex-1 relative w-full flex-col">
+      <div className="relative flex w-full flex-1 flex-col">
         {loading && (
-          <div className="flex h-full absolute w-full items-center justify-center">
+          <div className="absolute flex h-full w-full items-center justify-center">
             <ComponentLoading />
           </div>
         )}
@@ -53,46 +55,55 @@ function Home() {
             })}
           </span>
 
-          <div className="mt-4 flex space-x-4">
-            <div className="border-aquamarine-300 flex flex-col border-l-2 px-2">
-              <p className="text-xs">Entradas</p>
-              <span className="text-sm">
-                {balance?.incomes.toLocaleString("pt-BR", {
-                  style: "currency",
-                  currency: "BRL",
-                  maximumFractionDigits: 2,
-                  minimumFractionDigits: 2,
-                })}
-              </span>
+          <div className="flex w-full flex-col">
+            <div className="mt-4 flex h-fit space-x-4">
+              <div className="border-aquamarine-300 flex h-fit flex-col border-l-2 px-2">
+                <p className="text-xs">Entradas</p>
+                <span className="text-sm">
+                  {balance?.incomes.toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2,
+                  })}
+                </span>
+              </div>
+              <div className="border-brilliant-rose-600 flex h-fit flex-col border-l-2 px-2">
+                <p className="text-xs">Saídas</p>
+                <span className="text-sm">
+                  {balance?.expenses.toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2,
+                  })}
+                </span>
+              </div>
+              
             </div>
-            <div className="border-brilliant-rose-600 flex flex-col border-l-2 px-2">
-              <p className="text-xs">Saídas</p>
-              <span className="text-sm">
-                {balance?.expenses.toLocaleString("pt-BR", {
-                  style: "currency",
-                  currency: "BRL",
-                  maximumFractionDigits: 2,
-                  minimumFractionDigits: 2,
-                })}
-              </span>
-            </div>
-            <div className="flex flex-1 items-center justify-end">
-              <HomeFilter />
-              <Button
-                size={"icon-xl"}
-                variant={"ghost"}
-                className="rounded-full"
-              >
-                <Link className="flex items-center justify-center" to={"/add"}>
-                  <PlusCircleIcon className="size-7" color="#60f3af" />
-                </Link>
-              </Button>
+            <div className="flex w-full flex-col items-center justify-center">
+              <ExpensesChart transactions={balance?.data_to_balance_chart} />
+              <div className="flex w-full items-center justify-end gap-x-4">
+                <HomeFilter />
+                <Button
+                  size={"icon-sm"}
+                  variant={"ghost"}
+                  className="rounded-full"
+                >
+                  <Link
+                    className="flex items-center justify-center"
+                    to={"/add"}
+                  >
+                    <PlusCircleIcon className="size-6" color="#60f3af" />
+                  </Link>
+                </Button>
+              </div>
             </div>
           </div>
         </div>
         <section
           className={cn(
-            "relative flex w-full overflow-x-hidden flex-col items-center justify-center",
+            "relative flex w-full flex-col items-center justify-center overflow-x-hidden",
             loading && "blur-xs",
           )}
         >

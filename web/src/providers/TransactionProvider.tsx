@@ -4,11 +4,15 @@ import { sleep } from "@/functions/sleep";
 import useLoading from "@/hooks/useLoading";
 import {
   AddTransactionResponseSchema,
-  BalanceSchema,
   GetTransactionsResponseSchema,
   TransactionSchema,
 } from "@/lib/schemas";
-import type { AddTransactionProps, TransactionProps } from "@/lib/types";
+import type {
+  AddTransactionProps,
+  BalanceProps,
+  CategoriesChartProps,
+  TransactionProps,
+} from "@/lib/types";
 import { useState, type ReactNode } from "react";
 import { z } from "zod";
 
@@ -18,7 +22,7 @@ export function TransactionContextProvider({
   children: ReactNode;
 }) {
   const { handleLoading } = useLoading();
-  const [balance, setBalance] = useState<z.infer<typeof BalanceSchema>>();
+  const [balance, setBalance] = useState<BalanceProps>();
   const [transactions, setTransactions] = useState<
     z.infer<typeof TransactionSchema>[]
   >([]);
@@ -49,11 +53,34 @@ export function TransactionContextProvider({
     );
 
     const balance = incomes - expenses;
+    const data_to_chart: CategoriesChartProps[] = Object.values(
+      transactions.reduce<Record<string, CategoriesChartProps>>(
+        (acc, transaction) => {
+          const key = `${transaction.category}-${transaction.operation}`;
+
+          if (!acc[key]) {
+            acc[key] = {
+              category: transaction.category,
+              transactions: [],
+              operation: transaction.operation,
+              total_amount: 0,
+            };
+          }
+
+          acc[key].transactions.push(transaction);
+          acc[key].total_amount += transaction.amount;
+
+          return acc;
+        },
+        {},
+      ),
+    ).sort((a, b) => a.total_amount - b.total_amount);
 
     return setBalance({
       balance,
       expenses,
       incomes,
+      data_to_balance_chart: data_to_chart,
     });
   }
   async function getAllTransactions(id: string) {
