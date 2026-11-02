@@ -16,6 +16,7 @@ function Table({ transactions }: { transactions: TransactionProps[] }) {
   const [searchParams] = useSearchParams();
   const searchMonth = searchParams.get("month");
   const searchYear = searchParams.get("year");
+  const category = searchParams.get("category");
   let month = searchMonth;
   if (month === "1") {
     month = "janeiro";
@@ -45,7 +46,8 @@ function Table({ transactions }: { transactions: TransactionProps[] }) {
   return (
     <UITable className="overflow-x-hidden">
       <TableCaption>
-        Suas movimentações no mês de {month}{searchYear && "/"+searchYear.slice(2, 4)}
+        Suas movimentações no mês de {month}
+        {searchYear && "/" + searchYear.slice(2, 4)}
       </TableCaption>
       <TableHeader>
         <TableRow>
@@ -56,36 +58,64 @@ function Table({ transactions }: { transactions: TransactionProps[] }) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {transactions.map((transaction: TransactionProps) => {
-          return (
-            <TableRow key={transaction.id}>
-              <TableCell className="w-[5%] place-items-center">
-                <CategoryIcons category={transaction.category} />
-              </TableCell>
-              <TableCell className="font-medium capitalize">
-                {transaction.description.length >= 20
-                  ? transaction.description.slice(0, 15) + "..."
-                  : transaction.description}
-              </TableCell>
-              <TableCell className="text-right">
-                {transaction.amount.toLocaleString("pt-BR", {
-                  style: "currency",
-                  currency: "BRL",
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
-              </TableCell>
-              <TableCell className="w-[5%] place-items-end xl:w-fit">
-                <Link
-                  to={`/transaction/${transaction.id}`}
-                  className="flex w-full place-items-center items-center justify-end"
-                >
-                  <Edit2 size={12} />
-                </Link>
-              </TableCell>
-            </TableRow>
-          );
-        })}
+        {transactions
+          .filter((t) => {
+            if (category) {
+              return t.category === category;
+            }
+            return true;
+          })
+          .map((transaction: TransactionProps) => {
+            return (
+              <TableRow key={transaction.id}>
+                <TableCell className="w-[5%] place-items-center">
+                  <CategoryIcons category={transaction.category} />
+                </TableCell>
+                <TableCell className="font-medium capitalize">
+                  {transaction.description.length >= 20
+                    ? transaction.description.slice(0, 15) + "..."
+                    : transaction.description}
+                </TableCell>
+                <TableCell className="text-right">
+                  {transaction.amount.toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </TableCell>
+                <TableCell className="w-[5%] place-items-end xl:w-fit">
+                  <Link
+                    to={`/transaction/${transaction.id}`}
+                    className="flex w-full place-items-center items-center justify-end"
+                  >
+                    <Edit2 size={12} />
+                  </Link>
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        <TableRow>
+          <TableCell className="w-[5%] place-items-center"></TableCell>
+          <TableCell className="font-medium capitalize">Total</TableCell>
+          <TableCell className="text-right">
+            {transactions
+              .filter((t) => {
+                if (category) {
+                  return t.category === category;
+                }
+                return true;
+              })
+              .reduce((sum, t) => sum + t.amount, 0)
+              .toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+          </TableCell>
+          <TableCell className="w-[5%] place-items-center"></TableCell>
+        </TableRow>
       </TableBody>
     </UITable>
   );

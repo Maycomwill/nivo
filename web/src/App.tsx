@@ -8,7 +8,7 @@ function App() {
     <>
       <div
         className={cn(
-          "flex min-h-screen w-full flex-col items-start justify-start bg-slate-950 text-slate-50 dark:bg-slate-950 dark:text-slate-50",
+          "bg-background text-foreground flex min-h-screen w-full flex-col items-start justify-start scroll-smooth antialiased",
         )}
       >
         <BrowserRouter>

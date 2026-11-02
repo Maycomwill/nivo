@@ -19,8 +19,8 @@ function Registro() {
           loading && "blur-xs",
         )}
       >
-        <div className="bg-aquamarine-300/30 absolute top-[5%] -right-20 z-10 size-52 -translate-y-1/2 animate-[pulse_10s_linear_infinite,right-arc_3s_linear_infinite] rounded-full blur-[96px]" />
-        <div className="bg-scooter-500/50 direction-alternate absolute top-[20%] right-40 z-10 size-28 -translate-y-1/2 animate-[pulse_5s_linear_infinite,left-arc_5s_linear_infinite] rounded-full blur-3xl" />
+        <div className="absolute top-[5%] -right-20 z-10 size-52 -translate-y-1/2 animate-[pulse_10s_linear_infinite,right-arc_3s_linear_infinite] rounded-full bg-emerald-300/30 blur-[96px]" />
+        <div className="direction-alternate absolute top-[20%] right-40 z-10 size-36 -translate-y-1/2 animate-[pulse_5s_linear_infinite,left-arc_10s_linear_infinite] rounded-full bg-teal-500/40 blur-3xl" />
         <section className="flex w-full items-center justify-start">
           <Button variant={"ghost"} size={"icon"} onClick={() => navigate("/")}>
             <ArrowLeft />
@@ -32,8 +32,8 @@ function Registro() {
               <img className="size-16" src={NivoLogo} />
             </section>
             <section className="mt-2 flex flex-col items-center justify-center">
-              <span className="text-slate-50">Crie sua conta</span>
-              <span className="text-center text-sm text-slate-100/35">
+              <span className="text-foreground">Crie sua conta</span>
+              <span className="text-foreground/70 text-center text-sm">
                 Nivo, sua forma intuitiva de organização financeira
               </span>
             </section>
@@ -42,6 +42,7 @@ function Registro() {
         <div className="flex w-full flex-1 pt-8">
           <RegisterForm />
         </div>
+
       </div>
     </>
   );

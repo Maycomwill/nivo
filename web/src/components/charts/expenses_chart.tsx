@@ -21,7 +21,7 @@ function ExpensesChart({
     .map((item, index) => ({
       category: item.category,
       amount: item.total_amount,
-      fill: `var(--chart-${(index % 5) + 1})`,
+      fill: `var(--chart-${(index % 8) + 1})`,
     }));
 
   const chartConfig = {
@@ -66,7 +66,6 @@ function ExpensesChart({
           dataKey="amount"
           nameKey="category"
           innerRadius={60}
-          
         />
       </PieChart>
     </ChartContainer>

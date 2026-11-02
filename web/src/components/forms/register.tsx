@@ -101,7 +101,7 @@ function RegisterForm() {
                     autoComplete="off"
                     min={8}
                   />
-                  <div className="absolute top-[45%] right-0 left-1/2 flex w-4 -translate-x-4 translate-y-1/2 items-center justify-center">
+                  <div className="absolute top-1/2 left-1/2 flex w-4 -translate-x-6 translate-y-1/2 items-center justify-center">
                     <Button
                       className="size-4"
                       size={"icon"}

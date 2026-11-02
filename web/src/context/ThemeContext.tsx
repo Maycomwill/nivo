@@ -1,7 +1,7 @@
 import { createContext } from "react";
 
 export interface ThemeContextProps {
-  handleThemeChange: (enabled: boolean) => void;
+  handleThemeChange: () => void;
   enabled: boolean
 }
 

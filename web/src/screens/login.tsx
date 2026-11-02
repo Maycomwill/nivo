@@ -32,8 +32,8 @@ function Login() {
               <img className="size-16" src={NivoLogo} />
             </section>
             <section className="mt-2 flex flex-col items-center justify-center">
-              <span className="text-slate-50">Acesse sua conta</span>
-              <span className="text-center text-sm text-slate-100/35">
+              <span className="text-foreground">Acesse sua conta</span>
+              <span className="text-foreground/50 dark:text-foreground/35 text-center text-sm">
                 Sua forma intuitiva de organização financeira
               </span>
             </section>
@@ -41,13 +41,13 @@ function Login() {
           <section className="w-full">
             <LoginForm />
           </section>
-          <div className="my-4 h-px w-full rounded-full bg-radial from-slate-500/60 via-slate-500/3 to-transparent" />
+          <div className="my-4 h-px w-full rounded-full bg-radial from-mist-500/60 via-mist-500/3 to-transparent" />
           <section className="">
-            <p className="text-center text-xs text-slate-500">
+            <p className="text-foreground/50 dark:text-foreground/35 text-center text-xs">
               Ainda não possui conta?{" "}
               <span>
                 <Link
-                  className="text-xs text-slate-500 duration-150 ease-in-out hover:text-slate-200"
+                  className="text-primary hover:text-primary/80 text-xs duration-150 ease-in-out dark:text-teal-400 dark:hover:text-teal-600"
                   to={"/registro"}
                 >
                   Registre-se
