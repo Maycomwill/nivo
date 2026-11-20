@@ -97,12 +97,18 @@ function Table({ transactions }: { transactions: TransactionProps[] }) {
           })}
         <TableRow>
           <TableCell className="w-[5%] place-items-center"></TableCell>
-          <TableCell className="font-medium capitalize">Total</TableCell>
+          <TableCell className="font-medium capitalize">Total de gastos</TableCell>
           <TableCell className="text-right">
             {transactions
               .filter((t) => {
                 if (category) {
                   return t.category === category;
+                }
+                return true;
+              })
+              .filter((t) => {
+                if (t) {
+                  return t.operation === "expense";
                 }
                 return true;
               })

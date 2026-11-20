@@ -37,7 +37,7 @@ function Home() {
         <p className="font-bold capitalize">
           Olá,{" "}
           <span className="text-primary">
-            {user!.name.trim().split(" ")[0]}👋{" "}
+            {user!.name.trim().split(" ")[0]} 👋
           </span>
         </p>
         <ConfigMenu />
@@ -51,7 +51,13 @@ function Home() {
 
         <div className={cn("flex flex-col", loading && "blur-xs")}>
           <p className="text-xs">Balanço do mês</p>
-          <span className="text-4xl font-bold tracking-wide">
+          <span
+            className={cn(
+              "text-4xl font-bold tracking-wide",
+              balance && balance!.balance < 0 && "text-destructive",
+              balance && balance!.balance > 0 && "text-primary",
+            )}
+          >
             {balance?.balance.toLocaleString("pt-BR", {
               style: "currency",
               currency: "BRL",
@@ -98,7 +104,7 @@ function Home() {
                     className="flex items-center justify-center"
                     to={"/add"}
                   >
-                    <PlusCircleIcon className="size-6 " />
+                    <PlusCircleIcon className="size-6" />
                   </Link>
                 </Button>
               </div>

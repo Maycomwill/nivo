@@ -74,15 +74,15 @@ function Transaction() {
         </div>
         <div
           id="body"
-          className="animate-page-up relative flex w-full flex-1 flex-col rounded-t-3xl bg-slate-900/90 p-8"
+          className="animate-page-up bg-muted relative flex w-full flex-1 flex-col rounded-t-3xl p-8 dark:bg-muted"
         >
-          <div className="absolute top-4 left-1/2 h-1 w-1/3 -translate-x-1/2 rounded-full bg-slate-800/50" />
+          <div className="absolute top-4 left-1/2 h-1 w-1/3 -translate-x-1/2 rounded-full bg-gray-500/50 dark:bg-background/50" />
           <span
             className={cn(
               "text-5xl font-bold tracking-wider",
               transaction.operation === "income"
-                ? "text-green-400"
-                : "text-red-400",
+                ? "text-primary"
+                : "text-destructive",
             )}
           >
             {transaction.amount.toLocaleString("pt-BR", {
@@ -94,20 +94,20 @@ function Transaction() {
           </span>
 
           <div className="space-y-2">
-            <p className="text-lg text-slate-50/80 capitalize">
+            <p className="text-foreground/80 text-lg capitalize">
               {transaction.description}
             </p>
 
-            <p className="flex items-center justify-start gap-1 text-lg text-slate-50/80">
+            <p className="text-foreground/80 flex items-center justify-start gap-1 text-lg">
               Categoria:
               <span>
                 {CategoryIcons({ category: transaction.category, size: 16 })}
               </span>
             </p>
-            <p className="text-lg text-slate-50/80">
+            <p className="text-foreground/80 text-lg">
               {format(transaction.date, "dd/MM/yyyy", { locale: ptBR })}
             </p>
-            <p className="text-lg text-slate-50/80">
+            <p className="text-foreground/80 text-lg">
               Custo fixo: {transaction.fixed ? "Sim" : "Não"}
             </p>
           </div>

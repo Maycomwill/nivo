@@ -54,6 +54,7 @@ function FilterMenu() {
       params.delete("category");
       return params;
     });
+    setCategoriesOpen(false);
     return;
   }
 
@@ -169,9 +170,21 @@ function FilterMenu() {
                 variant={"ghost"}
                 onClick={() => setPeriodOpen(true)}
               >
-                Período
+                Mês e Ano
               </Button>
             </DropdownMenuItem>
+            <DropdownMenuItem
+              render={
+                <Button
+                  disabled
+                  className={"w-full text-center disabled:cursor-not-allowed"}
+                  variant={"ghost"}
+                  onClick={() => setPeriodOpen(true)}
+                >
+                  Período
+                </Button>
+              }
+            ></DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
