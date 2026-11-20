@@ -33,9 +33,9 @@ export default defineConfig({
             purpose: "any maskable",
           },
           {
-            src: "/nivo.svg",
+            src: "/nivo1080x1080.png",
             sizes: "1080x1080",
-            type: "image/svg+xml",
+            type: "image/png",
             purpose: "any maskable",
           },
         ],
