@@ -13,6 +13,7 @@ import { Link, useSearchParams } from "react-router";
 import ExpensesChart from "@/components/charts/expenses_chart";
 import ConfigMenu from "@/components/menus/config_menu";
 import FilterMenu from "@/components/menus/filter_menu";
+import ExportXLSX from "@/components/dialogs/export_xlsx";
 
 function Home() {
   const { user } = useAuth();
@@ -94,6 +95,7 @@ function Home() {
             <div className="flex w-full flex-col items-center justify-center">
               <ExpensesChart transactions={balance?.data_to_balance_chart} />
               <div className="flex w-full items-center justify-end gap-x-4">
+                <ExportXLSX />
                 <FilterMenu />
                 <Button
                   size={"icon-sm"}

@@ -15,6 +15,7 @@ import type {
 } from "@/lib/types";
 import { useState, type ReactNode } from "react";
 import { z } from "zod";
+import * as XLSX from "xlsx";
 
 export function TransactionContextProvider({
   children,
@@ -262,6 +263,28 @@ export function TransactionContextProvider({
     }
   }
 
+  async function createXLSXFile() {
+    const new_transactions = transactions.map(
+      (transaction: TransactionProps) => {
+        return {
+          data: transaction.date,
+          movimentação:
+            transaction.operation === "income" ? "Entrada" : "Saída",
+          categoria: transaction.category,
+          descrição: transaction.description,
+          valor: transaction.amount,
+          fixo: transaction.fixed ? "Sim" : "Não",
+        };
+      },
+    );
+    const worksheet = XLSX.utils.json_to_sheet(new_transactions);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Transactions");
+    XLSX.writeFile(workbook, "transactions.xlsx", { compression: true });
+    console.log("createXLSXFile called");
+    return;
+  }
+
   return (
     <TransactionContext.Provider
       value={{
@@ -270,6 +293,7 @@ export function TransactionContextProvider({
         getOneTransaction,
         deleteOneTransaction,
         addTransaction,
+        createXLSXFile,
         transactions,
         transaction,
         balance,
