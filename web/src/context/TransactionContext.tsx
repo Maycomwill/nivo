@@ -16,6 +16,7 @@ export interface TransactionContextProps {
   getOneTransaction: (transaction_id: string) => void;
   deleteOneTransaction: (id: string) => void;
   addTransaction: (data: AddTransactionProps) => Promise<void>;
+  createXLSXFile: () => Promise<void>;
 }
 
 export const TransactionContext = createContext({} as TransactionContextProps);
