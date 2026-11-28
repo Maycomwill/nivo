@@ -263,6 +263,10 @@ export function TransactionContextProvider({
     }
   }
 
+  function capitalizeFirstLetter(val: string) {
+    return String(val).charAt(0).toUpperCase() + String(val).slice(1);
+  }
+
   async function createXLSXFile() {
     const new_transactions = transactions.map(
       (transaction: TransactionProps) => {
@@ -270,9 +274,12 @@ export function TransactionContextProvider({
           data: transaction.date,
           movimentação:
             transaction.operation === "income" ? "Entrada" : "Saída",
-          categoria: transaction.category,
+          categoria: capitalizeFirstLetter(transaction.category),
           descrição: transaction.description,
-          valor: transaction.amount,
+          valor:
+            transaction.operation === "income"
+              ? transaction.amount
+              : -transaction.amount,
           fixo: transaction.fixed ? "Sim" : "Não",
         };
       },

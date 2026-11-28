@@ -17,7 +17,6 @@ export default defineConfig({
         name: "Nivo",
         short_name: "Nivo",
         description: "Aplicativo de controle financeiro pessoal.",
-        theme_color: "#ffffff",
         lang: "pt-BR",
         icons: [
           {
@@ -33,8 +32,8 @@ export default defineConfig({
             purpose: "any",
           },
           {
-            src: "/pwa-512x512.png",
-            sizes: "512x512",
+            src: "/pwa-192x192.png",
+            sizes: "192x192",
             type: "image/png",
             purpose: "maskable",
           },

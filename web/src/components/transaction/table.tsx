@@ -51,7 +51,7 @@ function Table({ transactions }: { transactions: TransactionProps[] }) {
       </TableCaption>
       <TableHeader>
         <TableRow>
-          <TableHead>Cat.</TableHead>
+          <TableHead className="text-center">Cat.</TableHead>
           <TableHead className="w-25">Descrição.</TableHead>
           <TableHead className="text-right">Valor</TableHead>
           <TableHead className="text-right">+</TableHead>
